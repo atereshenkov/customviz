@@ -717,7 +717,7 @@ $(element).append(legendElement);
 
 							}
 							if(finalURL != '') {
-								window.location.href = finalURL;
+								//window.location.href = finalURL;
                                                                 LookerCharts.Utils.openUrl(finalURL, e);
 							}
 						}
