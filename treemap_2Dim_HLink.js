@@ -643,6 +643,7 @@ $(element).append(legendElement);
 				//***** Below variable extracts the labels name from the dimension
 				var firstDimensionLabel = queryResponse.fields.dimensions[0].label_short;
 				var appliedFilterField = '';
+				var baseURL = '';
 				var clickPD = 0;
 				if(queryResponse.hasOwnProperty('applied_filters')) {
                                         console.log('FLT' + queryResponse.applied_filters)
@@ -657,6 +658,11 @@ $(element).append(legendElement);
 
                                         }
 					baseURL = unescape(document.referrer.substring(0,elementURL.indexOf('filter_config')));
+					console.log('URL:' + baseURL);
+// 					for (part in baseURL.split('&')){
+// 						console.log(
+// 					}
+
                                 }  else
                                        console.log('No applied filters');
 
@@ -670,7 +676,6 @@ $(element).append(legendElement);
 				{
 
 					var appliedFilterLabel = queryResponse.applied_filters[appliedFilters[i]].field.label_short;
-					console.log(baseURL);
 
 					//Filter field label (Given in dashboard) and Dimension lable(given in visualiaztion) should be same (Case sensitive)
 					if(appliedFilterLabel == firstDimensionLabel) {
