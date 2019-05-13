@@ -647,12 +647,13 @@ $(element).append(legendElement);
 				var clickPD = 0;
 				if(queryResponse.hasOwnProperty('applied_filters')) {
 					console.log('FLT' + queryResponse.applied_filters)
+					document.iframe_filters = queryResponse.applied_filters;
 					for(var propName in queryResponse.applied_filters) {
 						propValue =queryResponse.applied_filters[propName]
 						console.log("F:"+ propName + ":" + propValue);
 					}
 				}  else
-                               console.log('NOF:LT');
+                                       console.log('NOF:LT');
 				/* ---<IMPORTANT NOTE>
 				# Visualization can have fields used from parameter (Dynamic dimension using parameters) or dimension (static dimension)
 				# Match the dimension field label added in filters with dimension field label added in visualization. If found get the view_name.field_name from applied_filters and pass it hasownproperty in below if condition
@@ -670,7 +671,7 @@ $(element).append(legendElement);
 
 		// ***** Commented below code to pass applied filters found in above loop run through filters	//if(queryResponse.hasOwnProperty('applied_filters')){if(queryResponse.applied_filters.hasOwnProperty(queryResponse.fields.dimensions[0].scope+'.'+queryResponse.fields.dimensions[0].label_short.replace(/ /g,'_').toLowerCase())){clickPD=1}else{clickPD=0}}else{clickPD=0};
 			if(queryResponse.hasOwnProperty('applied_filters')){if(queryResponse.applied_filters.hasOwnProperty(appliedFilterField)){clickPD=1}else{clickPD=0}}else{clickPD=0};
-if(queryResponse.hasOwnProperty('applied_filters')) document.iframe_filters = queryResponse.applied_filters;
+
 				for(var i=0; i<originalDataParam.length; i++)
 				{
 					var originalDataElement = originalDataParam[i];
@@ -730,7 +731,7 @@ if(queryResponse.hasOwnProperty('applied_filters')) document.iframe_filters = qu
 							}
 							if(finalURL != '') {
 								//window.location.href = finalURL;
-								LookerCharts.Utils.openUrl(finalURL, e);
+								//LookerCharts.Utils.openUrl(finalURL, e);
 							}
 						}
 					}
