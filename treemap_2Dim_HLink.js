@@ -670,9 +670,8 @@ $(element).append(legendElement);
 
 					if(firstDimensionValue == firstDimensionSelectedValue && secondDimensionValue == secondDimensionSelectedValue) {
 						if(firstDimensionValue) {
-							baseURL = unescape(currentElement.baseURI);
+							//baseURL = unescape(currentElement.baseURI);
 							baseURL = unescape(document.referrer);
-							
 							firstDimLabelName = queryResponse.fields.dimensions[0].label_short+'=';
 							firstDimSelectedValue = firstDimensionSelectedValue+'&';
 							if(firstDimSelectedValue.includes(",")){
@@ -718,7 +717,7 @@ $(element).append(legendElement);
 							}
 							if(finalURL != '') {
 								//window.location.href = finalURL;
-                                                                LookerCharts.Utils.openUrl(finalURL, e);
+								LookerCharts.Utils.openUrl(finalURL, e);
 							}
 						}
 					}
