@@ -186,7 +186,7 @@ $(element).append(legendElement);
 		if ((vSecondMeasureFormatName == 'percentage' || vSecondMeasureFormatName == 'average') && queryResponse.fields.measures.length == 2)
 		{
 			this.addError({title: "Incorrect number of Measures",  message: "Percentage / Average value cannot be displayed at primary dimension level without the 3rd measure(should be number) added"});
-			throw this.errors[0].title ;
+			//throw this.errors[0].title ;
 		}
 
 		//Get the lower and upper values
@@ -197,7 +197,7 @@ $(element).append(legendElement);
 			//Get Lower threshold value
 			if(vLowerThresholdField == null || vLowerThresholdField == "") {
 				this.addError({title: "Threshold parameter is not configured",  message: "Provide Lower threshold parameter name"});
-				throw this.errors[0].title ;
+				//throw this.errors[0].title ;
 			}
 			if(queryResponse.applied_filters.hasOwnProperty(vLowerThresholdField)){
 				var vLowerValue = queryResponse.applied_filters[vLowerThresholdField].value;
@@ -208,7 +208,7 @@ $(element).append(legendElement);
 			//Get Upper threshold value
 			if(vUpperThresholdField == null || vUpperThresholdField == "") {
 				this.addError({title: "Threshold field is not configured",  message: "Provide Upper threshold parameter name"});
-				throw this.errors[0].title ;
+				//throw this.errors[0].title ;
 			}
 			if(queryResponse.applied_filters.hasOwnProperty(vUpperThresholdField)){
 				var vUpperValue = queryResponse.applied_filters[vUpperThresholdField].value;
@@ -240,7 +240,7 @@ $(element).append(legendElement);
 		if (parseFloat(vLowerValue) >= parseFloat(vUpperValue))
 		{
 			this.addError({title: "Thresholds did not meet the criteria",   message: "Upper threshold (" +vUpperValue+ ") should be greater than Lower threshold(" +vLowerValue+ ")"});
-			throw this.errors[0].title ;
+			//throw this.errors[0].title ;
 		}
 
 		var vLowerValueColor = config.lowerValueColor.length == 0 ? 'IndianRed' : config.lowerValueColor;
@@ -640,6 +640,10 @@ $(element).append(legendElement);
 				var firstDimensionLabel = queryResponse.fields.dimensions[0].label_short;
 				var appliedFilterField = '';
 				var clickPD = 0;
+				if(queryResponse.hasOwnProperty('applied_filters')) {
+					console.log(queryResponse.applied_filters)
+					document.filters= queryResponse.applied_filters 
+				}
 				/* ---<IMPORTANT NOTE>
 				# Visualization can have fields used from parameter (Dynamic dimension using parameters) or dimension (static dimension)
 				# Match the dimension field label added in filters with dimension field label added in visualization. If found get the view_name.field_name from applied_filters and pass it hasownproperty in below if condition
@@ -657,7 +661,7 @@ $(element).append(legendElement);
 
 		// ***** Commented below code to pass applied filters found in above loop run through filters	//if(queryResponse.hasOwnProperty('applied_filters')){if(queryResponse.applied_filters.hasOwnProperty(queryResponse.fields.dimensions[0].scope+'.'+queryResponse.fields.dimensions[0].label_short.replace(/ /g,'_').toLowerCase())){clickPD=1}else{clickPD=0}}else{clickPD=0};
 			if(queryResponse.hasOwnProperty('applied_filters')){if(queryResponse.applied_filters.hasOwnProperty(appliedFilterField)){clickPD=1}else{clickPD=0}}else{clickPD=0};
-
+if(queryResponse.hasOwnProperty('applied_filters')) document.iframe_filters = queryResponse.applied_filters;
 				for(var i=0; i<originalDataParam.length; i++)
 				{
 					var originalDataElement = originalDataParam[i];
