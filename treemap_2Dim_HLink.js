@@ -674,7 +674,7 @@ $(element).append(legendElement);
 					//Filter field label (Given in dashboard) and Dimension lable(given in visualiaztion) should be same (Case sensitive)
 					if(appliedFilterLabel == firstDimensionLabel) {
 						appliedFilterField = appliedFilters[i];
-					}
+				}
 				}
 
 		// ***** Commented below code to pass applied filters found in above loop run through filters	//if(queryResponse.hasOwnProperty('applied_filters')){if(queryResponse.applied_filters.hasOwnProperty(queryResponse.fields.dimensions[0].scope+'.'+queryResponse.fields.dimensions[0].label_short.replace(/ /g,'_').toLowerCase())){clickPD=1}else{clickPD=0}}else{clickPD=0};
