@@ -648,7 +648,6 @@ $(element).append(legendElement);
 				if(queryResponse.hasOwnProperty('applied_filters')) {
 					console.log('FLT' + queryResponse.applied_filters)
 					document.iframe_filters = queryResponse.applied_filters;
-					*/
 					for(var i=0; i<queryResponse.applied_filters.length; i++)
 					{
 
