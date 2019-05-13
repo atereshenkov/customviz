@@ -152,6 +152,7 @@ $(element).append(legendElement);
 		if (queryResponse.fields.dimensions.length != 2 || queryResponse.fields.measures.length != vNumberOfMeasures)
 		{
 			this.addError({title: "Incorrect number of Dimensions or Measures",  message: "This chart requires 2 Dimensions and "+vNumberOfMeasures+" Measures"});
+			return;
 		};
 
 		//Removes svg and div element with paragraphs before plotting graph
@@ -186,6 +187,7 @@ $(element).append(legendElement);
 		if ((vSecondMeasureFormatName == 'percentage' || vSecondMeasureFormatName == 'average') && queryResponse.fields.measures.length == 2)
 		{
 			this.addError({title: "Incorrect number of Measures",  message: "Percentage / Average value cannot be displayed at primary dimension level without the 3rd measure(should be number) added"});
+			return;
 			//throw this.errors[0].title ;
 		}
 
@@ -197,6 +199,7 @@ $(element).append(legendElement);
 			//Get Lower threshold value
 			if(vLowerThresholdField == null || vLowerThresholdField == "") {
 				this.addError({title: "Threshold parameter is not configured",  message: "Provide Lower threshold parameter name"});
+				return;
 				//throw this.errors[0].title ;
 			}
 			if(queryResponse.applied_filters.hasOwnProperty(vLowerThresholdField)){
@@ -208,6 +211,7 @@ $(element).append(legendElement);
 			//Get Upper threshold value
 			if(vUpperThresholdField == null || vUpperThresholdField == "") {
 				this.addError({title: "Threshold field is not configured",  message: "Provide Upper threshold parameter name"});
+				return;
 				//throw this.errors[0].title ;
 			}
 			if(queryResponse.applied_filters.hasOwnProperty(vUpperThresholdField)){
@@ -240,6 +244,7 @@ $(element).append(legendElement);
 		if (parseFloat(vLowerValue) >= parseFloat(vUpperValue))
 		{
 			this.addError({title: "Thresholds did not meet the criteria",   message: "Upper threshold (" +vUpperValue+ ") should be greater than Lower threshold(" +vLowerValue+ ")"});
+			return;
 			//throw this.errors[0].title ;
 		}
 
@@ -641,9 +646,13 @@ $(element).append(legendElement);
 				var appliedFilterField = '';
 				var clickPD = 0;
 				if(queryResponse.hasOwnProperty('applied_filters')) {
-					console.log(queryResponse.applied_filters)
-					document.filters= queryResponse.applied_filters 
-				}
+					console.log('FLT' + queryResponse.applied_filters)
+					for(var propName in queryResponse.applied_filters) {
+						propValue =queryResponse.applied_filters[propName]
+						console.log("F:"+ propName + ":" + propValue);
+					}
+				}  else
+                               console.log('NOF:LT');
 				/* ---<IMPORTANT NOTE>
 				# Visualization can have fields used from parameter (Dynamic dimension using parameters) or dimension (static dimension)
 				# Match the dimension field label added in filters with dimension field label added in visualization. If found get the view_name.field_name from applied_filters and pass it hasownproperty in below if condition
