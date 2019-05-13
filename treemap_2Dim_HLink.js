@@ -648,10 +648,19 @@ $(element).append(legendElement);
 				if(queryResponse.hasOwnProperty('applied_filters')) {
 					console.log('FLT' + queryResponse.applied_filters)
 					document.iframe_filters = queryResponse.applied_filters;
-					for(var propName in queryResponse.applied_filters) {
-						propValue =queryResponse.applied_filters[propName]
-						console.log("F:"+ propName + ":" + propValue);
+					*/
+					for(var i=0; i<queryResponse.applied_filters.length; i++)
+					{
+
+						var appliedFilterLabel = queryResponse.applied_filters[appliedFilters[i]].field.label_short;
+						var appliedFilterValue = queryResponse.applied_filters[appliedFilters[i]].value;
+						console.log("F:"+ appliedFilterLabel + ":" + appliedFilterValue);
+
 					}
+// 					for(var propName in queryResponse.applied_filters) {
+// 						propValue =queryResponse.applied_filters[propName]
+// 						console.log("F:"+ propName + ":" + propValue);
+// 					}
 				}  else
                                        console.log('NOF:LT');
 				/* ---<IMPORTANT NOTE>
