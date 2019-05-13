@@ -638,30 +638,29 @@ $(element).append(legendElement);
 				var elementURL = '';
 				var finalURL = '';
 				var appliedFilters = Object.keys(queryResponse.applied_filters);
-				//***** Below variable extracts dimension lable and replaces " "(if space found in label) with "_", this will be considered as field name, in this case the field name in the view must be same as label name given
-				//var dim0 = queryResponse.fields.dimensions[0].label.replace(/ /g,'_').toLowerCase();
+
 
 				//***** Below variable extracts the labels name from the dimension
 				var firstDimensionLabel = queryResponse.fields.dimensions[0].label_short;
 				var appliedFilterField = '';
 				var clickPD = 0;
 				if(queryResponse.hasOwnProperty('applied_filters')) {
-					console.log('FLT' + queryResponse.applied_filters)
-					document.iframe_filters = queryResponse.applied_filters;
-					for(var i=0; i<queryResponse.applied_filters.length; i++)
-					{
+                                        console.log('FLT' + queryResponse.applied_filters)
+                                        document.iframe_filters = queryResponse.applied_filters;
+                                        var appliedFilters = Object.keys(queryResponse.applied_filters);
+					for(var i=0; i<appliedFilters.length; i++)
+                                        {
 
-						var appliedFilterLabel = queryResponse.applied_filters[appliedFilters[i]].field.label_short;
-						var appliedFilterValue = queryResponse.applied_filters[appliedFilters[i]].value;
-						console.log("F:"+ appliedFilterLabel + ":" + appliedFilterValue);
+                                                var appliedFilterLabel = queryResponse.applied_filters[appliedFilters[i]].field.label_short;
+                                                var appliedFilterValue = queryResponse.applied_filters[appliedFilters[i]].value;
+                                                console.log("Applied Filter:"+ appliedFilterLabel + ":" + appliedFilterValue);
 
-					}
-// 					for(var propName in queryResponse.applied_filters) {
-// 						propValue =queryResponse.applied_filters[propName]
-// 						console.log("F:"+ propName + ":" + propValue);
-// 					}
-				}  else
-                                       console.log('NOF:LT');
+                                        }
+					baseURL = unescape(document.referrer.substring(0,elementURL.indexOf('filter_config')));
+                                }  else
+                                       console.log('No applied filters');
+
+
 				/* ---<IMPORTANT NOTE>
 				# Visualization can have fields used from parameter (Dynamic dimension using parameters) or dimension (static dimension)
 				# Match the dimension field label added in filters with dimension field label added in visualization. If found get the view_name.field_name from applied_filters and pass it hasownproperty in below if condition
@@ -669,15 +668,18 @@ $(element).append(legendElement);
 				*/
 				for(var i=0; i<appliedFilters.length; i++)
 				{
-					//var appliedFilter = appliedFilters[i].substring(appliedFilters[i].indexOf(".")+1); //Commenting this to change the validation at label level(below variable)
+
 					var appliedFilterLabel = queryResponse.applied_filters[appliedFilters[i]].field.label_short;
+					console.log(baseURL);
+
 					//Filter field label (Given in dashboard) and Dimension lable(given in visualiaztion) should be same (Case sensitive)
 					if(appliedFilterLabel == firstDimensionLabel) {
 						appliedFilterField = appliedFilters[i];
 				}
 				}
 
-		// ***** Commented below code to pass applied filters found in above loop run through filters	//if(queryResponse.hasOwnProperty('applied_filters')){if(queryResponse.applied_filters.hasOwnProperty(queryResponse.fields.dimensions[0].scope+'.'+queryResponse.fields.dimensions[0].label_short.replace(/ /g,'_').toLowerCase())){clickPD=1}else{clickPD=0}}else{clickPD=0};
+		// ***** Commented below code to pass applied filters found in above loop run through filters	
+
 			if(queryResponse.hasOwnProperty('applied_filters')){if(queryResponse.applied_filters.hasOwnProperty(appliedFilterField)){clickPD=1}else{clickPD=0}}else{clickPD=0};
 
 				for(var i=0; i<originalDataParam.length; i++)
@@ -693,7 +695,6 @@ $(element).append(legendElement);
 					if(firstDimensionValue == firstDimensionSelectedValue && secondDimensionValue == secondDimensionSelectedValue) {
 						if(firstDimensionValue) {
 							//baseURL = unescape(currentElement.baseURI);
-							baseURL = unescape(document.referrer);
 							firstDimLabelName = queryResponse.fields.dimensions[0].label_short+'=';
 							firstDimSelectedValue = firstDimensionSelectedValue+'&';
 							if(firstDimSelectedValue.includes(",")){
