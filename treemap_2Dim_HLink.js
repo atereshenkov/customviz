@@ -789,7 +789,7 @@ $(element).append(legendElement);
 								//window.location.href = finalURL;
 								if (verbose) 	
 									console.log('Navigating to URL:' + finalURL);
-								//LookerCharts.Utils.openUrl(finalURL, e);
+								LookerCharts.Utils.openUrl(finalURL, e);
 							}
 						}
 					}
