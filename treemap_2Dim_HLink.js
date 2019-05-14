@@ -152,7 +152,6 @@ $(element).append(legendElement);
 		if (queryResponse.fields.dimensions.length != 2 || queryResponse.fields.measures.length != vNumberOfMeasures)
 		{
 			this.addError({title: "Incorrect number of Dimensions or Measures",  message: "This chart requires 2 Dimensions and "+vNumberOfMeasures+" Measures"});
-			return;
 		};
 
 		//Removes svg and div element with paragraphs before plotting graph
@@ -187,8 +186,7 @@ $(element).append(legendElement);
 		if ((vSecondMeasureFormatName == 'percentage' || vSecondMeasureFormatName == 'average') && queryResponse.fields.measures.length == 2)
 		{
 			this.addError({title: "Incorrect number of Measures",  message: "Percentage / Average value cannot be displayed at primary dimension level without the 3rd measure(should be number) added"});
-			return;
-			//throw this.errors[0].title ;
+			throw this.errors[0].title ;
 		}
 
 		//Get the lower and upper values
@@ -199,8 +197,7 @@ $(element).append(legendElement);
 			//Get Lower threshold value
 			if(vLowerThresholdField == null || vLowerThresholdField == "") {
 				this.addError({title: "Threshold parameter is not configured",  message: "Provide Lower threshold parameter name"});
-				return;
-				//throw this.errors[0].title ;
+				throw this.errors[0].title ;
 			}
 			if(queryResponse.applied_filters.hasOwnProperty(vLowerThresholdField)){
 				var vLowerValue = queryResponse.applied_filters[vLowerThresholdField].value;
@@ -211,8 +208,7 @@ $(element).append(legendElement);
 			//Get Upper threshold value
 			if(vUpperThresholdField == null || vUpperThresholdField == "") {
 				this.addError({title: "Threshold field is not configured",  message: "Provide Upper threshold parameter name"});
-				return;
-				//throw this.errors[0].title ;
+				throw this.errors[0].title ;
 			}
 			if(queryResponse.applied_filters.hasOwnProperty(vUpperThresholdField)){
 				var vUpperValue = queryResponse.applied_filters[vUpperThresholdField].value;
@@ -244,8 +240,7 @@ $(element).append(legendElement);
 		if (parseFloat(vLowerValue) >= parseFloat(vUpperValue))
 		{
 			this.addError({title: "Thresholds did not meet the criteria",   message: "Upper threshold (" +vUpperValue+ ") should be greater than Lower threshold(" +vLowerValue+ ")"});
-			return;
-			//throw this.errors[0].title ;
+			throw this.errors[0].title ;
 		}
 
 		var vLowerValueColor = config.lowerValueColor.length == 0 ? 'IndianRed' : config.lowerValueColor;
@@ -637,103 +632,30 @@ $(element).append(legendElement);
 				var secondDimensionSelectedValue = convertTitleTextToArray[1].split('=')[1].trim();
 				var elementURL = '';
 				var finalURL = '';
-				var appliedFilters ;
-				var verbose = true
-
+				var appliedFilters = Object.keys(queryResponse.applied_filters);
+				//***** Below variable extracts dimension lable and replaces " "(if space found in label) with "_", this will be considered as field name, in this case the field name in the view must be same as label name given
+				//var dim0 = queryResponse.fields.dimensions[0].label.replace(/ /g,'_').toLowerCase();
 
 				//***** Below variable extracts the labels name from the dimension
 				var firstDimensionLabel = queryResponse.fields.dimensions[0].label_short;
 				var appliedFilterField = '';
 				var clickPD = 0;
-
-				// Now we process the filers, included into the applieD_filetrs
-				// First, we take the original URL that contains all filter names up to filter_config. 
-				var baseURL = unescape(document.referrer.substring(0, document.referrer.indexOf('filter_config')));
-				if (!baseURL) {
-					// We will try to get it from document URL - not iframe
-					if (verbose) 	
-						console.log('iFrame not enabled, fetching URL from URL');
-					baseURL = unescape(document.URL.substring(0, document.URL.indexOf('filter_config')));
-				}
-				if(queryResponse.hasOwnProperty('applied_filters')) {
-
-					appliedFilters = Object.keys(queryResponse.applied_filters);
-					var filterMap = {};
-					if (verbose) 	
-						console.log('Base URL:' + baseURL);
-					// Iterate over all provided filters and get their filed short_description
-					// and respective values and store it in a map
-					// IMPORTANT: In order for the logic to find a proper match Filter Name must be same as short_label.
-					// Otherwise we cannot figure out what the filter name should be.
-					for(var i=0; i<appliedFilters.length; i++) {
-						var appliedFilterLabel = queryResponse.applied_filters[appliedFilters[i]].field.label_short;
-			                        var appliedFilterValue = queryResponse.applied_filters[appliedFilters[i]].value;
-                        			filterMap[appliedFilterLabel] = appliedFilterValue;
-						if (verbose) 	
-				                        console.log("Applied Filter:"+ appliedFilterLabel + "(" + appliedFilterValue + ")");
-
-						/* ---<IMPORTANT NOTE>
-						# Visualization can have fields used from parameter (Dynamic dimension using parameters) or dimension (static dimension)
-						# Match the dimension field label added in filters with dimension field label added in visualization. If found get the view_name.field_name from applied_filters and pass it hasownproperty in below if condition
-						# Label name is case sensitive, Label name given in dimension definition vs visualization should match
-						*/
-						//Filter field label (Given in dashboard) and Dimension lable(given in visualiaztion) should be same (Case sensitive)
-						if(appliedFilterLabel == firstDimensionLabel) {
-							appliedFilterField = appliedFilters[i];
-						}
-
-                    			}
-
-		                       // Now take the original URL, split it into parameters and process
-                		       // This is a first URL for the page. We cannot use the parameter values as it might be stale. Only names.
-					f_list = baseURL.split('&')
-					newURL = baseURL
-
-					for (p in f_list) {
-
-						// Find everything up to the = sign. This is a parameter name
-						// Corner case is the first parameter.
-						var full_token = f_list[p].substring(0, f_list[p].indexOf('='))
-						var f_name = full_token
-
-					  	// If this is the first parameter, we need to remove leading URL up to ?
-						if (p == 0) {
-							f_name = f_name.substring(f_name.indexOf('?')+1);
-						}
-
-						// Check if we found a parameter
-						if (!f_name) 
-							continue;
-
-						if (verbose) 	
-	 						console.log('Processed parameter: ' + f_list[p] + '('+ f_name + ')')
-						
-						// Now check if we have the parameter with the same name in the applied_filters map
-						if (filterMap.hasOwnProperty(f_name)) {
-							if (verbose) 	
-								console.log('Value:' + full_token + ':' + filterMap[f_name]);
-							// Found, replace the filter with the value filtered 
-						  	newURL = newURL.replace(f_list[p], full_token + "=" + filterMap[f_name])
-						}  else {
-							if (verbose) 	
-					    			console.log('Cannot find filter in the applied_filter:' + f_name);
-						}
-
-
+				/* ---<IMPORTANT NOTE>
+				# Visualization can have fields used from parameter (Dynamic dimension using parameters) or dimension (static dimension)
+				# Match the dimension field label added in filters with dimension field label added in visualization. If found get the view_name.field_name from applied_filters and pass it hasownproperty in below if condition
+				# Label name is case sensitive, Label name given in dimension definition vs visualization should match
+				*/
+				for(var i=0; i<appliedFilters.length; i++)
+				{
+					//var appliedFilter = appliedFilters[i].substring(appliedFilters[i].indexOf(".")+1); //Commenting this to change the validation at label level(below variable)
+					var appliedFilterLabel = queryResponse.applied_filters[appliedFilters[i]].field.label_short;
+					//Filter field label (Given in dashboard) and Dimension lable(given in visualiaztion) should be same (Case sensitive)
+					if(appliedFilterLabel == firstDimensionLabel) {
+						appliedFilterField = appliedFilters[i];
 					}
-					baseURL = newURL
-					if (verbose) 	
-						console.log('New URL:' + baseURL);
-
-               			 }  else if (verbose) {
-				// no applied_filters - do nothing
-				    console.log('No applied filters');
 				}
 
-
-
-		// ***** Commented below code to pass applied filters found in above loop run through filters	
-
+		// ***** Commented below code to pass applied filters found in above loop run through filters	//if(queryResponse.hasOwnProperty('applied_filters')){if(queryResponse.applied_filters.hasOwnProperty(queryResponse.fields.dimensions[0].scope+'.'+queryResponse.fields.dimensions[0].label_short.replace(/ /g,'_').toLowerCase())){clickPD=1}else{clickPD=0}}else{clickPD=0};
 			if(queryResponse.hasOwnProperty('applied_filters')){if(queryResponse.applied_filters.hasOwnProperty(appliedFilterField)){clickPD=1}else{clickPD=0}}else{clickPD=0};
 
 				for(var i=0; i<originalDataParam.length; i++)
@@ -748,7 +670,8 @@ $(element).append(legendElement);
 
 					if(firstDimensionValue == firstDimensionSelectedValue && secondDimensionValue == secondDimensionSelectedValue) {
 						if(firstDimensionValue) {
-							
+							//baseURL = unescape(currentElement.baseURI);
+							baseURL = unescape(document.referrer);
 							firstDimLabelName = queryResponse.fields.dimensions[0].label_short+'=';
 							firstDimSelectedValue = firstDimensionSelectedValue+'&';
 							if(firstDimSelectedValue.includes(",")){
@@ -794,8 +717,6 @@ $(element).append(legendElement);
 							}
 							if(finalURL != '') {
 								//window.location.href = finalURL;
-								if (verbose) 	
-									console.log('Navigating to URL:' + finalURL);
 								LookerCharts.Utils.openUrl(finalURL, e);
 							}
 						}
@@ -877,3 +798,5 @@ $(element).append(legendElement);
 	//End of Legend
 	}
 })
+
+
