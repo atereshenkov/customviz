@@ -784,8 +784,8 @@ $(element).append(legendElement);
 									else { //Include First dimension selected value to the url
 										console.log('IN1');
 										elementURL = baseURL.replace(firstDimLabelName,(firstDimLabelName+firstDimSelectedValue).substring(0,(firstDimLabelName+firstDimSelectedValue).indexOf('&')));
-										finalURL = elementURL.substring(0,elementURL.indexOf('filter_config'));
-										console.log('elementURL' + elementURL +'finalURL' +finalURL +);
+										finalURL = elementURL;
+										console.log('elementURL' + elementURL +'finalURL' +finalURL);
 									}
 								}
 								else {
@@ -803,7 +803,7 @@ $(element).append(legendElement);
 									else {	//Include Second dimension selected value to the url
 										console.log('IN2');
 										elementURL = baseURL.replace(secondDimLabelName,(secondDimLabelName+secondDimSelectedValue));
-										finalURL = elementURL.substring(0,elementURL.indexOf('filter_config'));
+										finalURL = elementURL;
 									}
 								}
 								else {
