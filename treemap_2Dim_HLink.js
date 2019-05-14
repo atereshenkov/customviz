@@ -653,7 +653,7 @@ $(element).append(legendElement);
 					// We will try to get it from document URL - not iframe
 					if (verbose) 	
 						console.log('iFrame not enabled, fetching URL from URL');
-					baseURL = unescape(document.URL.substring(0, document.referrer.indexOf('filter_config')));
+					baseURL = unescape(document.URL.substring(0, document.URL.indexOf('filter_config')));
 				}
 				if(queryResponse.hasOwnProperty('applied_filters')) {
 
