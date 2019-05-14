@@ -637,51 +637,93 @@ $(element).append(legendElement);
 				var secondDimensionSelectedValue = convertTitleTextToArray[1].split('=')[1].trim();
 				var elementURL = '';
 				var finalURL = '';
-				var appliedFilters = Object.keys(queryResponse.applied_filters);
+				var appliedFilters ;
+				var verbose = true
 
 
 				//***** Below variable extracts the labels name from the dimension
 				var firstDimensionLabel = queryResponse.fields.dimensions[0].label_short;
 				var appliedFilterField = '';
-				var baseURL = '';
 				var clickPD = 0;
+
+				// Now we process the filers, included into the applieD_filetrs
+				// First, we take the original URL that contains all filter names up to filter_config. 
+				var baseURL = unescape(document.referrer.substring(0, document.referrer.indexOf('filter_config')));;
 				if(queryResponse.hasOwnProperty('applied_filters')) {
-                                        console.log('FLT' + queryResponse.applied_filters)
-                                        document.iframe_filters = queryResponse.applied_filters;
-                                        var appliedFilters = Object.keys(queryResponse.applied_filters);
-					for(var i=0; i<appliedFilters.length; i++)
-                                        {
 
-                                                var appliedFilterLabel = queryResponse.applied_filters[appliedFilters[i]].field.label_short;
-                                                var appliedFilterValue = queryResponse.applied_filters[appliedFilters[i]].value;
-                                                console.log("Applied Filter:"+ appliedFilterLabel + ":" + appliedFilterValue);
+					appliedFilters = Object.keys(queryResponse.applied_filters);
+					var filterMap = {};
+					if (verbose) 	
+						console.log('Base URL:' + baseURL);
+					// Iterate over all provided filters and get their filed short_description
+					// and respective values and store it in a map
+					// IMPORTANT: In order for the logic to find a proper match Filter Name must be same as short_label.
+					// Otherwise we cannot figure out what the filter name should be.
+					for(var i=0; i<appliedFilters.length; i++) {
+                        var appliedFilterLabel = queryResponse.applied_filters[appliedFilters[i]].field.label_short;
+                        var appliedFilterValue = queryResponse.applied_filters[appliedFilters[i]].value;
+                        filterMap[appliedFilterLabel] = appliedFilterValue;
+						if (verbose) 	
+	                        console.log("Applied Filter:"+ appliedFilterLabel + "(" + appliedFilterValue + ")");
 
-                                        }
-					baseURL = unescape(document.referrer.substring(0,elementURL.indexOf('filter_config')));
-					console.log('URL:' + baseURL);
-// 					for (part in baseURL.split('&')){
-// 						console.log(
-// 					}
+						/* ---<IMPORTANT NOTE>
+						# Visualization can have fields used from parameter (Dynamic dimension using parameters) or dimension (static dimension)
+						# Match the dimension field label added in filters with dimension field label added in visualization. If found get the view_name.field_name from applied_filters and pass it hasownproperty in below if condition
+						# Label name is case sensitive, Label name given in dimension definition vs visualization should match
+						*/
+						//Filter field label (Given in dashboard) and Dimension lable(given in visualiaztion) should be same (Case sensitive)
+						if(appliedFilterLabel == firstDimensionLabel) {
+							appliedFilterField = appliedFilters[i];
+						}
 
-                                }  else
-                                       console.log('No applied filters');
+                    }
 
 
-				/* ---<IMPORTANT NOTE>
-				# Visualization can have fields used from parameter (Dynamic dimension using parameters) or dimension (static dimension)
-				# Match the dimension field label added in filters with dimension field label added in visualization. If found get the view_name.field_name from applied_filters and pass it hasownproperty in below if condition
-				# Label name is case sensitive, Label name given in dimension definition vs visualization should match
-				*/
-				for(var i=0; i<appliedFilters.length; i++)
-				{
+                    // Now take the original URL, split it into parameters and process
+                    // This is a first URL for the page. We cannot use the parameter values as it might be stale. Only names.
+					f_list = baseURL.split('&')
+					newURL = baseURL
 
-					var appliedFilterLabel = queryResponse.applied_filters[appliedFilters[i]].field.label_short;
+					for (p in f_list) {
 
-					//Filter field label (Given in dashboard) and Dimension lable(given in visualiaztion) should be same (Case sensitive)
-					if(appliedFilterLabel == firstDimensionLabel) {
-						appliedFilterField = appliedFilters[i];
-				}
-				}
+						// Find everything up to the = sign. This is a parameter name
+						var f_name = f_list[p].substring(0,f_list[p].indexOf('='))
+
+					  	// If this is the first parameter, we need to remove leading URL up to ?
+						if (p == 0) {
+							f_name = f_name.substring(f_name.indexOf('?')+1);
+						}
+
+						// Check if we found a parameter
+						if (!f_name) 
+							continue;
+
+						if (verbose) 	
+	 						console.log('Processed parameter: ' + f_list[p] + '('+ f_name + ')')
+						
+						// Now check if we have the parameter with the same name in the applied_filters map
+						if (filterMap.hasOwnProperty(f_name)) {
+							if (verbose) 	
+								console.log('Value:' + filterMap[f_name]);
+							// Found, replace the filter with the value filtered 
+						  	newURL = newURL.replace(f_name, f_name + "=" + filterMap[f_name])
+						}  else {
+							if (verbose) 	
+					    		console.log('Cannot find filter in the applied_filter:' + f_name);
+						}
+
+
+					}
+					baseURL = newURL
+					if (verbose) 	
+						console.log('New URL:' + baseURL);
+
+                }  else if (verbose) {
+                	# no applied_filters - do nothing
+		            console.log('No applied filters');
+		        }
+
+
 
 		// ***** Commented below code to pass applied filters found in above loop run through filters	
 
@@ -699,7 +741,7 @@ $(element).append(legendElement);
 
 					if(firstDimensionValue == firstDimensionSelectedValue && secondDimensionValue == secondDimensionSelectedValue) {
 						if(firstDimensionValue) {
-							//baseURL = unescape(currentElement.baseURI);
+							
 							firstDimLabelName = queryResponse.fields.dimensions[0].label_short+'=';
 							firstDimSelectedValue = firstDimensionSelectedValue+'&';
 							if(firstDimSelectedValue.includes(",")){
@@ -826,5 +868,3 @@ $(element).append(legendElement);
 	//End of Legend
 	}
 })
-
-
