@@ -759,7 +759,7 @@ $(element).append(legendElement);
 					if(firstDimensionValue == firstDimensionSelectedValue && secondDimensionValue == secondDimensionSelectedValue) {
 						console.log('Inner');
 						if(firstDimensionValue) {
-							
+							console.log('INXX');
 							firstDimLabelName = queryResponse.fields.dimensions[0].label_short+'=';
 							firstDimSelectedValue = firstDimensionSelectedValue+'&';
 							if(firstDimSelectedValue.includes(",")){
@@ -774,6 +774,7 @@ $(element).append(legendElement);
 								/*<IMPORTANT NOTE>
 								URL contains the labels of Filters not the field labels, ensure both dimension label & lable given for fitler are same, else the data will not get refreshed with selected values. This is applicable to all the dimensions added in visualization & filters
 								*/
+								console.log('IN0');
 								if(baseURL.includes('&'+firstDimLabelName)) {// This step checks the existance of filter with the label name(it performs full name check with & prefixed, & is required to validate the complete name in url)
 									if(baseURL.includes('&'+firstDimLabelName+firstDimSelectedValue)) { //Check if value from First dimension is already selected
 										finalURL =  '';
@@ -781,6 +782,7 @@ $(element).append(legendElement);
 						
 									}
 									else { //Include First dimension selected value to the url
+										console.log('IN1');
 										elementURL = baseURL.replace(firstDimLabelName,(firstDimLabelName+firstDimSelectedValue).substring(0,(firstDimLabelName+firstDimSelectedValue).indexOf('&')));
 										finalURL = elementURL.substring(0,elementURL.indexOf('filter_config'));
 									}
@@ -798,6 +800,7 @@ $(element).append(legendElement);
 										console.log('OUT3');
 									}
 									else {	//Include Second dimension selected value to the url
+										console.log('IN2');
 										elementURL = baseURL.replace(secondDimLabelName,(secondDimLabelName+secondDimSelectedValue));
 										finalURL = elementURL.substring(0,elementURL.indexOf('filter_config'));
 									}
