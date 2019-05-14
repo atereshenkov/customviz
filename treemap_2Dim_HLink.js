@@ -711,9 +711,9 @@ $(element).append(legendElement);
 						// Now check if we have the parameter with the same name in the applied_filters map
 						if (filterMap.hasOwnProperty(f_name)) {
 							if (verbose) 	
-								console.log('Value:' + filterMap[f_name]);
+								console.log('Value:' + full_token + ':' + filterMap[f_name]);
 							// Found, replace the filter with the value filtered 
-						  	newURL = newURL.replace(full_token, full_token + "=" + filterMap[f_name])
+						  	newURL = newURL.replace(f_list[p], full_token + "=" + filterMap[f_name])
 						}  else {
 							if (verbose) 	
 					    			console.log('Cannot find filter in the applied_filter:' + f_name);
