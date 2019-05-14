@@ -152,7 +152,7 @@ $(element).append(legendElement);
 		if (queryResponse.fields.dimensions.length != 2 || queryResponse.fields.measures.length != vNumberOfMeasures)
 		{
 			this.addError({title: "Incorrect number of Dimensions or Measures",  message: "This chart requires 2 Dimensions and "+vNumberOfMeasures+" Measures"});
-			return;
+			//return;
 		};
 
 		//Removes svg and div element with paragraphs before plotting graph
@@ -777,6 +777,8 @@ $(element).append(legendElement);
 								if(baseURL.includes('&'+firstDimLabelName)) {// This step checks the existance of filter with the label name(it performs full name check with & prefixed, & is required to validate the complete name in url)
 									if(baseURL.includes('&'+firstDimLabelName+firstDimSelectedValue)) { //Check if value from First dimension is already selected
 										finalURL =  '';
+										console.log('OUT1');
+						
 									}
 									else { //Include First dimension selected value to the url
 										elementURL = baseURL.replace(firstDimLabelName,(firstDimLabelName+firstDimSelectedValue).substring(0,(firstDimLabelName+firstDimSelectedValue).indexOf('&')));
@@ -784,6 +786,7 @@ $(element).append(legendElement);
 									}
 								}
 								else {
+										console.log('OUT2');
 									finalURL =  '';
 								}
 
@@ -792,6 +795,7 @@ $(element).append(legendElement);
 								if(baseURL.includes('&'+secondDimLabelName)) { // This step checks the existance of filter with the label name(it performs full name check with & prefixed, & is required to validate the complete name in url)
 									if(baseURL.includes('&'+secondDimLabelName+secondDimSelectedValue)) { //Check if value from Second dimension is already selected
 										finalURL =  '';
+										console.log('OUT3');
 									}
 									else {	//Include Second dimension selected value to the url
 										elementURL = baseURL.replace(secondDimLabelName,(secondDimLabelName+secondDimSelectedValue));
@@ -799,6 +803,7 @@ $(element).append(legendElement);
 									}
 								}
 								else {
+										console.log('OUT4');
 									finalURL =  '';
 								}
 
