@@ -648,7 +648,11 @@ $(element).append(legendElement);
 
 				// Now we process the filers, included into the applieD_filetrs
 				// First, we take the original URL that contains all filter names up to filter_config. 
-				var baseURL = unescape(document.referrer.substring(0, document.referrer.indexOf('filter_config')));;
+				var baseURL = unescape(document.referrer.substring(0, document.referrer.indexOf('filter_config')));
+				if (!baseURL) {
+					// We will try to get it from document URL - not iframe
+					baseURL = unescape(document.URL.substring(0, document.referrer.indexOf('filter_config')));
+				}
 				if(queryResponse.hasOwnProperty('applied_filters')) {
 
 					appliedFilters = Object.keys(queryResponse.applied_filters);
