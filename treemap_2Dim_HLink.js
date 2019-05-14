@@ -651,6 +651,8 @@ $(element).append(legendElement);
 				var baseURL = unescape(document.referrer.substring(0, document.referrer.indexOf('filter_config')));
 				if (!baseURL) {
 					// We will try to get it from document URL - not iframe
+					if (verbose) 	
+						console.log('iFrame not enabled, fetching URL from URL');
 					baseURL = unescape(document.URL.substring(0, document.referrer.indexOf('filter_config')));
 				}
 				if(queryResponse.hasOwnProperty('applied_filters')) {
