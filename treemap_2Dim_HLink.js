@@ -785,6 +785,7 @@ $(element).append(legendElement);
 										console.log('IN1');
 										elementURL = baseURL.replace(firstDimLabelName,(firstDimLabelName+firstDimSelectedValue).substring(0,(firstDimLabelName+firstDimSelectedValue).indexOf('&')));
 										finalURL = elementURL.substring(0,elementURL.indexOf('filter_config'));
+										console.log('elementURL' + elementURL +'finalURL' +finalURL +);
 									}
 								}
 								else {
