@@ -732,9 +732,17 @@ $(element).append(legendElement);
 
 
 
-		// ***** Commented below code to pass applied filters found in above loop run through filters	
+			// ***** Commented below code to pass applied filters found in above loop run through filters	
 
-			if(queryResponse.hasOwnProperty('applied_filters')){if(queryResponse.applied_filters.hasOwnProperty(appliedFilterField)){clickPD=1}else{clickPD=0}}else{clickPD=0};
+				if(queryResponse.hasOwnProperty('applied_filters')) {
+					 if(queryResponse.applied_filters.hasOwnProperty(appliedFilterField))  {
+						 clickPD=1
+					 } else {
+						 clickPD=0
+					 }
+				}else {
+					clickPD=0
+				};
 
 				for(var i=0; i<originalDataParam.length; i++)
 				{
@@ -746,7 +754,10 @@ $(element).append(legendElement);
 					//	originalDataElement[queryResponse.fields.dimensions[1].name].value == secondDimensionSelectedValue) {
 						//if(originalDataElement[queryResponse.fields.dimensions[0].name].value) {
 
+					if (verbose) 
+						console.log('originalDataElement: ' + originalDataElement + 'firstDimensionValue: ' + firstDimensionValue + 'secondDimensionValue: ' + secondDimensionValue );
 					if(firstDimensionValue == firstDimensionSelectedValue && secondDimensionValue == secondDimensionSelectedValue) {
+						console.log('Inner');
 						if(firstDimensionValue) {
 							
 							firstDimLabelName = queryResponse.fields.dimensions[0].label_short+'=';
