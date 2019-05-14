@@ -666,11 +666,11 @@ $(element).append(legendElement);
 					// IMPORTANT: In order for the logic to find a proper match Filter Name must be same as short_label.
 					// Otherwise we cannot figure out what the filter name should be.
 					for(var i=0; i<appliedFilters.length; i++) {
-                        var appliedFilterLabel = queryResponse.applied_filters[appliedFilters[i]].field.label_short;
-                        var appliedFilterValue = queryResponse.applied_filters[appliedFilters[i]].value;
-                        filterMap[appliedFilterLabel] = appliedFilterValue;
+						var appliedFilterLabel = queryResponse.applied_filters[appliedFilters[i]].field.label_short;
+			                        var appliedFilterValue = queryResponse.applied_filters[appliedFilters[i]].value;
+                        			filterMap[appliedFilterLabel] = appliedFilterValue;
 						if (verbose) 	
-	                        console.log("Applied Filter:"+ appliedFilterLabel + "(" + appliedFilterValue + ")");
+				                        console.log("Applied Filter:"+ appliedFilterLabel + "(" + appliedFilterValue + ")");
 
 						/* ---<IMPORTANT NOTE>
 						# Visualization can have fields used from parameter (Dynamic dimension using parameters) or dimension (static dimension)
@@ -682,18 +682,19 @@ $(element).append(legendElement);
 							appliedFilterField = appliedFilters[i];
 						}
 
-                    }
+                    			}
 
-
-                    // Now take the original URL, split it into parameters and process
-                    // This is a first URL for the page. We cannot use the parameter values as it might be stale. Only names.
+		                       // Now take the original URL, split it into parameters and process
+                		       // This is a first URL for the page. We cannot use the parameter values as it might be stale. Only names.
 					f_list = baseURL.split('&')
 					newURL = baseURL
 
 					for (p in f_list) {
 
 						// Find everything up to the = sign. This is a parameter name
-						var f_name = f_list[p].substring(0,f_list[p].indexOf('='))
+						// Corner case is the first parameter.
+						var full_token = f_list[p].substring(0, f_list[p].indexOf('='))
+						var f_name = full_token
 
 					  	// If this is the first parameter, we need to remove leading URL up to ?
 						if (p == 0) {
@@ -712,10 +713,10 @@ $(element).append(legendElement);
 							if (verbose) 	
 								console.log('Value:' + filterMap[f_name]);
 							// Found, replace the filter with the value filtered 
-						  	newURL = newURL.replace(f_name, f_name + "=" + filterMap[f_name])
+						  	newURL = newURL.replace(full_token, full_token + "=" + filterMap[f_name])
 						}  else {
 							if (verbose) 	
-					    		console.log('Cannot find filter in the applied_filter:' + f_name);
+					    			console.log('Cannot find filter in the applied_filter:' + f_name);
 						}
 
 
@@ -724,10 +725,10 @@ $(element).append(legendElement);
 					if (verbose) 	
 						console.log('New URL:' + baseURL);
 
-                }  else if (verbose) {
-                	// no applied_filters - do nothing
-		            console.log('No applied filters');
-		        }
+               			 }  else if (verbose) {
+				// no applied_filters - do nothing
+				    console.log('No applied filters');
+				}
 
 
 
