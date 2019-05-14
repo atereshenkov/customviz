@@ -716,7 +716,9 @@ $(element).append(legendElement);
 						  	newURL = newURL.replace(f_list[p], full_token + "=" + filterMap[f_name])
 						}  else {
 							if (verbose) 	
-					    			console.log('Cannot find filter in the applied_filter:' + f_name);
+					    			console.log('Cannot find filter in the applied_filter, removing value:' + f_name);
+							  	newURL = newURL.replace(f_list[p], full_token + "=")
+							
 						}
 
 
