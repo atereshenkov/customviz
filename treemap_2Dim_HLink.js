@@ -719,7 +719,7 @@ $(element).append(legendElement);
 						console.log('New URL:' + baseURL);
 
                 }  else if (verbose) {
-                	# no applied_filters - do nothing
+                	// no applied_filters - do nothing
 		            console.log('No applied filters');
 		        }
 
@@ -787,6 +787,8 @@ $(element).append(legendElement);
 							}
 							if(finalURL != '') {
 								//window.location.href = finalURL;
+								if (verbose) 	
+									console.log('Navigating to URL:' + finalURL);
 								//LookerCharts.Utils.openUrl(finalURL, e);
 							}
 						}
